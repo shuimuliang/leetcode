@@ -20,41 +20,51 @@
 
 class Solution {
     func addTwoNumbers(_ l1: ListNode?, _ l2: ListNode?) -> ListNode? {
-        let sum = self.toInt(l1) + self.toInt(l2)
-        let arr = self.intToArray(sum)
-        return self.buildList(arr)
-    }
-
-    func toInt(_ li: ListNode?) -> Int {
-        var lastNode: ListNode? = li
-        var sum: Int = 0
-
-        if lastNode == nil {
-            return sum
+         if l1 == nil {
+            return l2
         }
-
-        repeat {
-            sum += lastNode!.val
-            if lastNode!.next != nil {
-                sum *= 10
+        if l2 == nil {
+            return l1
+        }
+        
+        let dummyHead = ListNode(0)
+        var p: ListNode? = l1
+        var q: ListNode? = l2
+        var curr = dummyHead
+        
+        var x, y, sum: Int
+        var carry:Int = 0
+        
+        while (p != nil || q != nil) {
+            if p == nil {
+                x = 0
             }
-            lastNode = lastNode!.next
-        } while (lastNode != nil)
-
-        return sum
-    }
-
-    func intToArray(_ num: Int) -> [Int] {
-        var arr = [Int]()
-        if num == 0 {
-            return arr
-        } 
-        var t = num
-        while t != 0 {
-            arr.append(t % 10)
-            t = t / 10
+            else {
+                x = p!.val
+            }
+            if q == nil {
+                y = 0
+            }
+            else {
+                y = q!.val
+            }
+            sum = carry + x + y
+            carry = sum / 10
+            curr.next = ListNode(sum % 10)
+            curr = curr.next!
+            if p != nil {
+                p = p!.next
+            }
+            if q != nil {
+                q = q!.next
+            }
         }
-        return arr 
+        
+        if carry > 0 {
+            curr.next = ListNode(carry)
+        }
+        
+        return dummyHead.next
     }
 
     func buildList(_ nums: [Int]) -> ListNode? {
@@ -77,6 +87,7 @@ class Solution {
 
         return rootNode
     }
+
 }
 
 /*
@@ -88,6 +99,6 @@ var s = Solution()
 var l1 = s.buildList(arr1)
 var l2 = s.buildList(arr2)
 
-print(s.intToArray(342))
-print(s.intToArray(807))
-// var l3 = s.addTwoNumbers(l1, l2)
+//print(s.intToArray(342))
+//print(s.intToArray(807))
+var l3 = s.addTwoNumbers(l1, l2)
